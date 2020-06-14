@@ -1,0 +1,3 @@
+*.pyc
+**/flask_session
+config.txt
