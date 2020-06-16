@@ -8,6 +8,12 @@
 {% block heading %}Channels{% endblock %}
 
 {% block content %}
+
+  <ul>
+    {% for channel in channels %}
+      <li>{{ channel.room }}</li>
+    {% endfor %}
+  <ul>
   <ul id="channels">
   </ul>
   <br>
