@@ -4,6 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When connected, configure buttons
   socket.on('connect', () => {
+    // Submit button is disabled by default.
+    document.querySelector('#submit').disabled = true;
+    // Enable button only if there is text in the input field.
+    document.querySelector('#channel').onkeyup = () => {
+      if (document.querySelector('#channel'). value.length > 0)
+        document.querySelector('#submit').disabled = false;
+      else
+        document.querySelector('#submit').disabled = true;
+      };
     // When a new channel is submited
     document.querySelector('#new-channel').onsubmit = () => {
       const channel = document.querySelector('#channel').value;

@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# channels = {}
+# channels = {'test-channel': [{'name': 'domo'}, {'text': 'testing'}]}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
