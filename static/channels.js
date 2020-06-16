@@ -25,7 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
     const li = document.createElement('li');
-    li.innerHTML = `New channel created: ${data.channel}`;
+    li.innerHTML = `New channel is created!: ${data.channel}`;
     document.querySelector('#channels').append(li);
+  });
+
+  // When a channel already exists, alert the user
+  socket.on('alert', data => {
+    alert(`${data.message}`);
   });
 });

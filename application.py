@@ -9,6 +9,7 @@ socketio = SocketIO(app)
 
 # stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
 
+# stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
 stored_channels = []
 
 @app.route("/", methods=["GET", "POST"])
@@ -28,11 +29,34 @@ def index():
 
 @socketio.on("submit channel")
 def channels(data):
+    list_channels = []
     channel = data["channel"]
-    # !!! add a new channel to stored_channels
-    new_channel={'room': channel, 'messages': []}
-    stored_channels.append(new_channel)
-    emit("announce channel", {"channel": channel}, broadcast=True)
+    # Add a new channel to stored_channels if it doesn't alredy exist
+    for c in stored_channels:
+        list_channels.append(c["room"])
+    if channel not in list_channels:
+        new_channel = {'room': channel, 'messages': []}
+        stored_channels.append(new_channel)
+        emit("announce channel", {"channel": channel}, broadcast=True)
+
+    else:
+        emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
+
+    # if channel in list_channels:
+    #     # emit("alert channel exists", {"channel": channel})
+    #     emit("alert", {"message": "This channel already exists."}, broadcast=False)
+    # new_channel = {'room': channel, 'messages': []}
+    # stored_channels.append(new_channel)
+    # emit("announce channel", {"channel": channel}, broadcast=True)
+
+# this is the one working but allows creating the same channels
+# @socketio.on("submit channel")
+# def channels(data):
+#     channel = data["channel"]
+#
+#     new_channel = {'room': channel, 'messages': []}
+#     stored_channels.append(new_channel)
+#     emit("announce channel", {"channel": channel}, broadcast=True)
 
 
 
