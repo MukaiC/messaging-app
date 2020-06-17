@@ -8,16 +8,13 @@
 {% block heading %}Channels{% endblock %}
 
 {% block content %}
-
-  <ul class="list-group-flush">
+  <ul class="list-group-flush" id="channels">
     {% for channel in channels %}
       <li class="list-group-item">{{ channel.room }}</li>
     {% endfor %}
   </ul>
   <br>
-  <ul id="channels" class="list-group">
-  </ul>
-  <br>
+
   <form id="new-channel">
     <div class="form-group">
       <input id="channel" class="form-control" autocomplete="off" autofocus placeholder="Create a New Channel" type="text"><br>

@@ -30,7 +30,7 @@ def index():
 @socketio.on("submit channel")
 def channels(data):
     list_channels = []
-    channel = data["channel"]
+    channel = data["channel"].strip()
     # Add a new channel to stored_channels if it doesn't alredy exist
     for c in stored_channels:
         list_channels.append(c["room"])

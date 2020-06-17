@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#submit').disabled = true;
     // Enable button only if there is text in the input field.
     document.querySelector('#channel').onkeyup = () => {
-      if (document.querySelector('#channel'). value.length > 0)
+      let channeltitle = document.querySelector('#channel').value.trim();
+      if (channeltitle.length > 0)
         document.querySelector('#submit').disabled = false;
       else
         document.querySelector('#submit').disabled = true;
