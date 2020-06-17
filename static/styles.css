@@ -1,3 +1,27 @@
 h1{
   color: #20B2AA;
 }
+
+/* ul{
+  list-style-type: none;
+} */
+
+%list{
+  padding: 50px;
+  padding-left: 20px;
+  margin: 20px;
+  /* margin-bottom: 20px; */
+  font-family: sans-serif;
+}
+
+.existing{
+  @extend %list;
+  background-color: #E0FFFF;
+  color: #696969;
+}
+
+.new{
+  @extend %list;
+  background-color: #AFEEEE;
+  color:#696969;
+}
