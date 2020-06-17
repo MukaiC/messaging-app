@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
     const li = document.createElement('li');
+    li.className = "list-group-item list-group-item-action list-group-item-success";
     li.innerHTML = `New channel is created!: ${data.channel}`;
     document.querySelector('#channels').append(li);
   });
