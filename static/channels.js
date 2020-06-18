@@ -1,3 +1,4 @@
+const template = Handlebars.compile(document.querySelector('#new-channel-item').innerHTML);
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -25,10 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    const li = document.createElement('li');
-    li.className = "list-group-item list-group-item-action list-group-item-success";
-    li.innerHTML = `New channel is created!: ${data.channel}`;
-    document.querySelector('#channels').append(li);
+    const content = template ({'new_channel': data.name_new_channel })
+    document.querySelector('#channels').innerHTML += content;
+    // const li = document.createElement('li');
+    // li.className = "list-group-item list-group-item-action list-group-item-success";
+    // li.innerHTML = `New channel is created!: ${data.name_new_channel}`;
+    // document.querySelector('#channels').append(li);
   });
 
   // When a channel already exists, alert the user
