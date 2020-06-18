@@ -28,10 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   socket.on('announce channel', data => {
     const content = template ({'new_channel': data.name_new_channel })
     document.querySelector('#channels').innerHTML += content;
-    // const li = document.createElement('li');
-    // li.className = "list-group-item list-group-item-action list-group-item-success";
-    // li.innerHTML = `New channel is created!: ${data.name_new_channel}`;
-    // document.querySelector('#channels').append(li);
   });
 
   // When a channel already exists, alert the user
