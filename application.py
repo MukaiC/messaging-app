@@ -35,7 +35,7 @@ def index():
 def messages():
     return render_template("messages.html")
 
-@socketio.on("submit channel")
+@socketio.on("create channel")
 def channels(data):
     list_channels = [] # stored_channels to be appended
     channel = data["channel"].strip() # a new channel sent by a user
@@ -51,6 +51,13 @@ def channels(data):
 
     else:
         emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
+
+@socketio.on("add message")
+def messages(data):
+    name = session["name"]
+    # time = 
+    pass
+
 
 if __name__ == '__main__':
     socketio.run(app)

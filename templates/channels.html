@@ -18,8 +18,8 @@
 
 {% block content %}
 <div class="container">
-  <!-- <div class="row"> -->
-    <!-- <div class="col-lg-4"> -->
+  <div class="row">
+    <div class="col-lg-4">
       <ul class="list-group-flush" id="channels">
         {% for channel in channels %}
           <li class="list-group-item"><a href="{{ url_for('messages') }}" data-room=channel.room>{{ channel.room }}</a></li>
@@ -30,14 +30,22 @@
       <form id="new-channel">
         <div class="form-group">
           <input id="channel" class="form-control" autocomplete="off" autofocus placeholder="Create a New Channel" type="text"><br>
-          <input id="submit" type="submit" class="btn btn-info">
+          <input id="submit-channel" type="submit" class="btn btn-info">
+          <!-- <input type="submit" class="submit btn btn-info"> -->
         </div>
       </form>
-    <!-- </div> -->
+    </div>
 
-    <!-- <div class="col-lg-8">
-    </div> -->
-  <!-- </div> -->
+    <div class="col-lg-8">
+      <form id="new-message">
+        <div class="form-group">
+          <input id="message" class="form-control" autocomplete="off" autofocus placeholder="Write your message here." type="text"><br>
+          <input id="submit-message" type="submit" class="btn btn-info">
+        </div>
+      </form>
+
+    </div>
+  </div>
 </div>
 
 {% endblock %}
