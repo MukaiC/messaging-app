@@ -4,6 +4,11 @@ from flask import Flask, render_template, request, session, jsonify
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+
+# Check for environment variable
+if not os.getenv("SECRET_KEY"):
+    raise RuntimeError("SECRET_KEY is not set")
+
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
