@@ -1,14 +1,62 @@
 {% extends "layout.html" %}
 
-{% block heading %}Welcome!{% endblock %}
+{% block script %}
+
+  <script id="new-channel-item" type="text/x-handlebars-template">
+    <li class="list-group-item list-group-item-action">
+      <a href="{{ url_for('messages') }}"  data-room={% raw -%}{{ new_channel }}{%- endraw %}>
+        New!: {% raw -%} {{ new_channel }} {%- endraw %}
+      </a>
+    </li>
+  </script>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+
+{% endblock %}
+
+{% block heading %}My web chat application{% endblock %}
 
 {% block content %}
-      <form id="form" action="" method="post">
+<div class="container">
+  <form id="register">
+    <div class="form-group">
+      <label>Please enter your display name</label><br>
+      <input id="new-name" name="new-name" class="form-control" autocomplete="off" autofocus placeholder="Name" type="text">
+      <small class="form-text text-muted">This name will be displayed with your messages.</small><br>
+      <input id="submit-name" type="submit" class="btn btn-info">
+    </div>
+  </form>
+</div>
+
+<div id="user" class="container">
+  <div class="row">
+    <div class="col-lg-4">
+      <ul class="list-group-flush" id="channels">
+        {% for channel in channels %}
+          <li class="list-group-item"><a href="{{ url_for('messages') }}" data-room=channel.room>{{ channel.room }}</a></li>
+        {% endfor %}
+      </ul>
+      <br>
+
+      <form id="new-channel">
         <div class="form-group">
-          <label>Please enter your display name</label><br>
-          <input id="name" name="name" class="form-control" autocomplete="off" autofocus placeholder="Name" type="text">
-          <small class="form-text text-muted">This name will be displayed with your messages.</small><br>
-          <input type="submit" class="btn btn-info">
+          <input id="channel" class="form-control" autocomplete="off" autofocus placeholder="Create a New Channel" type="text"><br>
+          <input id="submit-channel" type="submit" class="btn btn-info">
+          <!-- <input type="submit" class="submit btn btn-info"> -->
         </div>
       </form>
-  {% endblock %}
+    </div>
+
+    <div class="col-lg-8">
+      <form id="new-message">
+        <div class="form-group">
+          <input id="message" class="form-control" autocomplete="off" autofocus placeholder="Write your message here." type="text"><br>
+          <input id="submit-message" type="submit" class="btn btn-info">
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
