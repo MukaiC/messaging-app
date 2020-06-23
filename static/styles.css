@@ -1,3 +1,9 @@
-h1{
+h2{
   color: #20B2AA;
+}
+h1{
+  color: #87CEEB;
+}
+.enter {
+  float: right;
 }

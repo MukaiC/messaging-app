@@ -21,6 +21,14 @@ stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'm
 def index():
     return render_template("index.html")
 
+@app.route("/channels", methods=["GET"])
+def channels():
+    # Generate list of channels
+    list_channels = []
+    for c in stored_channels:
+        list_channels.append(c["room"])
+    return jsonify(list_channels)
+
 @app.route("/messages")
 def messages():
     return render_template("messages.html")

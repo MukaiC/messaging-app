@@ -1,6 +1,5 @@
-
-
-const template = Handlebars.compile(document.querySelector('#new-channel-item').innerHTML);
+const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
+document.addEventListener('DOMContentLoaded', load);
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#submit-channel').disabled = true;
     };
     // When a new channel is submited
-    document.querySelector('#new-channel').onsubmit = () => {
+    document.querySelector('#create-new-channel').onsubmit = () => {
       const channel = document.querySelector('#channel').value.trim();
       socket.emit('create channel', {'channel': channel});
       document.querySelector('#channel').value = '';
@@ -46,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    const content = template ({'new_channel': data.name_new_channel })
-    document.querySelector('#channels').innerHTML += content;
+    const new_channel = channel_template ({'contents': `New! ${data.name_new_channel}` })
+    document.querySelector('#channels').innerHTML += new_channel;
   });
 
   // When a channel already exists, alert the user
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// for a first time user to register a display name
+// For a first time user to register a display name
 document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem('name')) {
       document.querySelector('#user').style.display = 'none';
@@ -75,6 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let new_user = document.querySelector('#new-name').value.trim();
     localStorage.setItem('name', new_user);
     alert(`Welcome ${new_user}!`);
-    return false;
   };
 });
+
+function load() {
+  const request = new XMLHttpRequest();
+  request.open('GET', '/channels');
+  request.onload = () => {
+    const data = JSON.parse(request.responseText);
+    data.forEach(add_channel);
+  };
+  request.send()
+};
+
+
+function add_channel(contents) {
+  const channel = channel_template({'contents': contents});
+  document.querySelector('#channels').innerHTML += channel;
+}

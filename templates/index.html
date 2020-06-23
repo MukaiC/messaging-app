@@ -2,13 +2,16 @@
 
 {% block script %}
 
-  <script id="new-channel-item" type="text/x-handlebars-template">
-    <li class="list-group-item list-group-item-action">
-      <a href="{{ url_for('messages') }}"  data-room={% raw -%}{{ new_channel }}{%- endraw %}>
-        New!: {% raw -%} {{ new_channel }} {%- endraw %}
-      </a>
-    </li>
+  <script id="channel-item" type="text/x-handlebars-template">
+    <div class="list-group-item">
+      {% raw -%}
+        {{ contents }}
+      {%- endraw %}
+      <button class="enter">Enter</button>
+    </div>
   </script>
+
+
 
   <script src="{{ url_for('static', filename='index.js') }}"></script>
 
@@ -31,14 +34,12 @@
 <div id="user" class="container">
   <div class="row">
     <div class="col-lg-4">
-      <ul class="list-group-flush" id="channels">
-        {% for channel in channels %}
-          <li class="list-group-item"><a href="{{ url_for('messages') }}" data-room=channel.room>{{ channel.room }}</a></li>
-        {% endfor %}
-      </ul>
+      <h2>Channels</h2><br>
+      <div id="channels">
+      </div>
       <br>
 
-      <form id="new-channel">
+      <form id="create-new-channel">
         <div class="form-group">
           <input id="channel" class="form-control" autocomplete="off" autofocus placeholder="Create a New Channel" type="text"><br>
           <input id="submit-channel" type="submit" class="btn btn-info">
@@ -48,6 +49,7 @@
     </div>
 
     <div class="col-lg-8">
+      <h2>Messages</h2><br>
       <form id="new-message">
         <div class="form-group">
           <input id="message" class="form-control" autocomplete="off" autofocus placeholder="Write your message here." type="text"><br>
