@@ -29,9 +29,6 @@ def channels():
         list_channels.append(c["room"])
     return jsonify(list_channels)
 
-@app.route("/messages")
-def messages():
-    return render_template("messages.html")
 
 @socketio.on("create channel")
 def channels(data):
