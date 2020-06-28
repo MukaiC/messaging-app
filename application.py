@@ -12,9 +12,10 @@ if not os.getenv("SECRET_KEY"):
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
+stored_channels = [{'id':0, 'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'id':1, 'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
 
-stored_channels = [{'id':0, 'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
+
+# stored_channels = [{'id':0, 'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
 
 # stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
 # stored_channels = []
@@ -28,8 +29,13 @@ def channels():
     # Generate list of channels
     list_channels = []
     for c in stored_channels:
-        list_channels.append(c["room"])
+        element = {'id': c['id'], 'room':c['room']}
+        list_channels.append(element)
+
+    # for c in stored_channels:
+    #     list_channels.append(c["room"])
     return jsonify(list_channels)
+
 
 
 @socketio.on("create channel")

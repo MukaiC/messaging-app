@@ -89,6 +89,7 @@ function load() {
 
 
 function add_channel(contents) {
-  const channel = channel_template({'contents': contents});
+  const channel = channel_template({'contents': `${contents.room}`, 'channel_id': `channel-${contents.id}`});
+  // const channel = channel_template({'contents': contents});
   document.querySelector('#channels').innerHTML += channel;
 }
