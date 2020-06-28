@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const message = document.querySelector('#message').value.trim();
       const time = Date.now()
       socket.emit('add message', {'message': message, 'time':time});
-      document.querySelectr('#message').value = '';
+      document.querySelector('#message').value = '';
       return false;
     };
 
