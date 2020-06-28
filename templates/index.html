@@ -3,7 +3,7 @@
 {% block script %}
 
   <script id="channel-item" type="text/x-handlebars-template">
-    <div class="channel">
+    <div class="channel" id={% raw -%} {{ channel_id }} {%- endraw %}>
       {% raw -%}
         {{ contents }}
       {%- endraw %}

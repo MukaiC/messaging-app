@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel}` })
+    const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel} `, 'channel_id': `channel-${data.id_new_channel}`})
     document.querySelector('#channels').innerHTML += new_channel;
   });
 

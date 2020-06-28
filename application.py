@@ -14,7 +14,9 @@ socketio = SocketIO(app)
 
 # stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
 
-stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
+stored_channels = [{'id':0, 'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
+
+# stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}]
 # stored_channels = []
 
 @app.route("/")
@@ -33,16 +35,20 @@ def channels():
 @socketio.on("create channel")
 def channels(data):
     list_channels = [] # stored_channels to be appended
+    # channel_id = 0
     channel = data["channel"].strip() # a new channel sent by a user
     # Create a list of existing channel.
     for c in stored_channels:
         list_channels.append(c["room"])
     # Add a new channel to stored_channels if it doesn't alredy exist.
     if channel not in list_channels:
-        new_channel = {'room': channel, 'messages': []}
+        # Add one to the id of the last element in stored_channels
+        channel_id = stored_channels[-1]['id']
+        new_channel_id = channel_id + 1
+        new_channel = {'id': new_channel_id, 'room': channel, 'messages': []}
         stored_channels.append(new_channel)
         name_new_channel = new_channel['room']
-        emit("announce channel", {"name_new_channel": name_new_channel}, broadcast=True)
+        emit("announce channel", {"name_new_channel": name_new_channel, "id_new_channel": new_channel_id}, broadcast=True)
 
     else:
         emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
