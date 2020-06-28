@@ -1,5 +1,5 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
-document.addEventListener('DOMContentLoaded', load);
+document.addEventListener('DOMContentLoaded', loadChannels);
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-function load() {
+function loadChannels() {
   const request = new XMLHttpRequest();
   request.open('GET', '/channels');
   request.onload = () => {

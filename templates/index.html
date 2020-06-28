@@ -11,7 +11,13 @@
     </div>
   </script>
 
-
+  <script id="message-item" type="text/x-handlebars-template">
+    <div class="message">
+      {% raw -%}
+        {{ contents }}
+      {%- endraw %}
+    </div>
+  </script>
 
   <script src="{{ url_for('static', filename='index.js') }}"></script>
 
@@ -49,6 +55,10 @@
 
     <div class="col-lg-8">
       <h2>Messages</h2><br>
+      <div id="messages">
+      </div>
+      <br>
+
       <form id="new-message">
         <div class="form-group">
           <input id="message" class="form-control" autocomplete="off" autofocus placeholder="Write your message here" type="text"><br>
