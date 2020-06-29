@@ -1,5 +1,4 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
-document.addEventListener('DOMContentLoaded', loadChannels);
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -45,7 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel} `, 'channel_id': `channel-${data.id_new_channel}`})
+    const new_channel = channel_template ({'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
+    // const new_channel = channel_template ({'heading': 'NEW! ', 'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
+    // const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel} `, 'channel_id': `channel-${data.id_new_channel}`})
     document.querySelector('#channels').innerHTML += new_channel;
   });
 
@@ -54,6 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`${data.message}`);
   });
 });
+
+// Load channels
+document.addEventListener('DOMContentLoaded', loadChannels);
+
+// When a enter button is pressed
+// document.addEventListener('click')
 
 // For a first time user to register a display name
 document.addEventListener('DOMContentLoaded', () => {
@@ -89,7 +96,8 @@ function loadChannels() {
 
 
 function add_channel(contents) {
-  const channel = channel_template({'contents': `${contents.room}`, 'channel_id': `channel-${contents.id}`});
+  const channel = channel_template({'contents': contents.room, 'channel_id': `channel-${contents.id}`});
+  // const channel = channel_template({'contents': `${contents.room}`, 'channel_id': `channel-${contents.id}`});
   // const channel = channel_template({'contents': contents});
   document.querySelector('#channels').innerHTML += channel;
 }
