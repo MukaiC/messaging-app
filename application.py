@@ -36,8 +36,9 @@ def channels():
     #     list_channels.append(c["room"])
     return jsonify(list_channels)
 
-@app.route("/messages", methods=["GET"])
+@app.route("/messages", methods=["POST"])
 def messages():
+    channel = request.form.get('channel')
     list_messages = []
     return jsonify(list_messages)
 

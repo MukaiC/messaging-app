@@ -44,9 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    const new_channel = channel_template ({'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
+    // const new_channel = channel_template ({'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
     // const new_channel = channel_template ({'heading': 'NEW! ', 'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
     // const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel} `, 'channel_id': `channel-${data.id_new_channel}`})
+    const new_channel = channel_template({'contents': data.name_new_channel});
     document.querySelector('#channels').innerHTML += new_channel;
   });
 
@@ -57,10 +58,37 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Load channels
-document.addEventListener('DOMContentLoaded', loadChannels);
+document.addEventListener('DOMContentLoaded', load_channels);
 
-// When a enter button is pressed
-// document.addEventListener('click')
+// Load messages if channel is selected
+document.addEventListener('DOMContentLoaded', () => {
+  // if (localStorage.getItem('channel'))
+  //   let channel = localStorage.getItem('channel');
+  //   load_messages(channel);
+
+  document.querySelectorAll('.channel-link').forEach(link => {
+    link.onclick = () => {
+      const currentChannel = this.innerHTML;
+      localStorage.setItem('channel', currentChannel);
+      load_messages(currentChannel)
+      return false;
+    };
+  });
+});
+
+
+// // When an enter button is pressed
+// document.addEventListener('click', event => {
+//   const element = event.target;
+//   if (element.className === 'enter') {
+//     // Store the name of the channel in localStorage
+//     const currentChannel = this.parentElement
+//     // Enter the room - soketio
+//
+//     // Load messages in the channel
+//     load_messages(channel);
+//   }
+// })
 
 // For a first time user to register a display name
 document.addEventListener('DOMContentLoaded', () => {
@@ -84,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 });
 
-function loadChannels() {
+function load_channels() {
   const request = new XMLHttpRequest();
   request.open('GET', '/channels');
   request.onload = () => {
@@ -96,8 +124,29 @@ function loadChannels() {
 
 
 function add_channel(contents) {
-  const channel = channel_template({'contents': contents.room, 'channel_id': `channel-${contents.id}`});
+  // const channel = channel_template({'contents': contents.room, 'channel_id': `channel-${contents.id}`});
   // const channel = channel_template({'contents': `${contents.room}`, 'channel_id': `channel-${contents.id}`});
   // const channel = channel_template({'contents': contents});
+  const channel = channel_template({'contents': contents.room});
   document.querySelector('#channels').innerHTML += channel;
-}
+};
+
+
+function load_messages(channel) {
+  const request = new XMLHttpRequest();
+  request.open('POST', '/messages');
+  request.onload = () => {
+    const data = JSON.parse(request.responseText);
+    data.forEach(add_message);
+  };
+  // Add channel name to request data
+  const data = new FormData();
+  data.append('channel', channel);
+  // Send request
+  request.send(data)
+};
+
+const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
+// function add_message(contents) {
+//
+// }

@@ -1,8 +1,11 @@
-h1{
+h1 {
   color: #87CEEB;
 }
-h2{
+h2 {
   color: #20B2AA;
+}
+ul {
+  list-style-type: none;
 }
 .enter {
   background-color: white;

@@ -3,12 +3,13 @@
 {% block script %}
 
   <script id="channel-item" type="text/x-handlebars-template">
-    <div class="channel" id={% raw -%} {{ channel_id }} {%- endraw %}>
+    <li>
+      <a href="" class="channel-link">
       {% raw -%}
         {{ contents }}
       {%- endraw %}
-      <button class="enter">Enter</button>
-    </div>
+      </a>
+    </li>
   </script>
 
   <script id="message-item" type="text/x-handlebars-template">
@@ -41,8 +42,10 @@
   <div class="row">
     <div class="col-lg-4">
       <h2>Channels</h2><br>
-      <div id="channels">
-      </div>
+      <!-- <div id="channels">
+      </div> -->
+      <ul id="channels">
+      </ul>
       <br>
 
       <form id="create-new-channel">
