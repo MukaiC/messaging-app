@@ -133,18 +133,23 @@ function add_channel(contents) {
 
 
 function load_messages(channel) {
-  const request = new XMLHttpRequest();
-  request.open('POST', '/messages');
-  request.onload = () => {
-    const data = JSON.parse(request.responseText);
-    data.forEach(add_message);
-  };
-  // Add channel name to request data
-  const data = new FormData();
-  data.append('channel', channel);
-  // Send request
-  request.send(data)
+  socket.emit('request messages', {'channel': channel});
 };
+
+// // function load_messages(channel) {
+//   const request = new XMLHttpRequest();
+//   request.open('POST', '/messages');
+//   request.onload = () => {
+//     const data = JSON.parse(request.responseText);
+//     data.forEach(add_message);
+//   };
+//   // Add channel name to request data
+//   const data = new FormData();
+//   data.append('channel', channel);
+//   // Send request
+//   request.send(data)
+// };
+
 
 const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
 // function add_message(contents) {

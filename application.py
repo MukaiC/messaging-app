@@ -36,11 +36,7 @@ def channels():
     #     list_channels.append(c["room"])
     return jsonify(list_channels)
 
-@app.route("/messages", methods=["POST"])
-def messages():
-    channel = request.form.get('channel')
-    list_messages = []
-    return jsonify(list_messages)
+
 
 @socketio.on("create channel")
 def channels(data):
@@ -62,6 +58,26 @@ def channels(data):
 
     else:
         emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
+
+
+# @app.route("/messages", methods=["POST"])
+# def messages():
+#     channel = request.form.get('channel')
+#     list_messages = []
+#     return jsonify(list_messages)
+
+@socketio.on("request messages")
+def messages(data):
+    room = data["channel"]
+    join_room(room)
+    # Find the index of matching channel
+    list_channels = []
+    for c in stored_channels:
+        list_channels.append(c['room'])
+    index = list_channels.index(room)
+    # Extract messages for the channel
+    messages = stored_channels[index]['messages']
+    emit("messages", messages)
 
 @socketio.on("add message")
 def messages(data):
