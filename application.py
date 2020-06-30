@@ -60,11 +60,19 @@ def channels(data):
         emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
 
 
-# @app.route("/messages", methods=["POST"])
-# def messages():
-#     channel = request.form.get('channel')
-#     list_messages = []
-#     return jsonify(list_messages)
+@app.route("/messages", methods=["POST"])
+def messages():
+    channel = request.form.get('channel')
+    # Find the index of matching channel
+    list_channels = []
+    for c in stored_channels:
+        list_channels.append(c['room'])
+    index = list_channels.index(channel)
+    # Extract messages for the channel
+    messages = stored_channels[index]['messages']
+    return jsonify(messages)
+
+
 
 @socketio.on("request messages")
 def messages(data):
@@ -79,11 +87,11 @@ def messages(data):
     messages = stored_channels[index]['messages']
     emit("messages", messages)
 
-@socketio.on("add message")
-def messages(data):
-    name = session["name"]
-    # time =
-    pass
+# @socketio.on("add message")
+# def messages(data):
+#     name = session["name"]
+#     # time =
+#     pass
 
 
 if __name__ == '__main__':

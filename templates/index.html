@@ -5,18 +5,15 @@
   <script id="channel-item" type="text/x-handlebars-template">
     <li>
       <a href="" class="channel-link">
-      {% raw -%}
-        {{ contents }}
-      {%- endraw %}
+      {% raw -%}{{ contents }}{%- endraw %}
       </a>
     </li>
   </script>
 
   <script id="message-item" type="text/x-handlebars-template">
     <div class="message">
-      {% raw -%}
-        {{ contents }}
-      {%- endraw %}
+      <span>{% raw -%}{{ text }}{%- endraw %}</span><br>
+      <span><small>{% raw -%}{{ info }}{%- endraw %}</small></span>
     </div>
   </script>
 

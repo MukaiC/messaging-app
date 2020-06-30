@@ -1,4 +1,5 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
+
 document.addEventListener('DOMContentLoaded', () => {
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -39,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#message').value = '';
       return false;
     };
-
   });
 
   // When a new channel is announced, add to the unordered list
@@ -57,24 +57,43 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+document.addEventListener('click', event => {
+  const element = event.target;
+  if (element.className === 'channel-link') {
+    const currentChannel = element.innerHTML.trim();
+    localStorage.setItem('channel', currentChannel);
+    event.preventDefault();
+    alert(`channel ${currentChannel} is selected!`);
+    load_messages(currentChannel);
+    // return false;
+  };
+});
+
+// document.addEventListener('DOMContentLoaded', function() {
+//   document.querySelectorAll('.channel-link').forEach(function (link) {
+//       link.onclick = function() {
+//         const currentChannel = this.innerHTML;
+//         // localStorage.setItem('channel', currentChannel);
+//         alert(`Entering ${currentChannel}!`);
+//         load_messages(currentChannel);
+//         return false;
+//       };
+//     });
+// });
+
+
 // Load channels
 document.addEventListener('DOMContentLoaded', load_channels);
+// document.addEventListener('DOMContentLoaded', load_messages("channel 1"));
 
 // Load messages if channel is selected
-document.addEventListener('DOMContentLoaded', () => {
-  // if (localStorage.getItem('channel'))
-  //   let channel = localStorage.getItem('channel');
-  //   load_messages(channel);
+// document.addEventListener('DOMContentLoaded', () => {
+//   if (localStorage.getItem('channel'))
+//     let channel = localStorage.getItem('channel');
+//     load_messages(channel);
+// });
 
-  document.querySelectorAll('.channel-link').forEach(link => {
-    link.onclick = () => {
-      const currentChannel = this.innerHTML;
-      localStorage.setItem('channel', currentChannel);
-      load_messages(currentChannel)
-      return false;
-    };
-  });
-});
+
 
 
 // // When an enter button is pressed
@@ -119,7 +138,7 @@ function load_channels() {
     const data = JSON.parse(request.responseText);
     data.forEach(add_channel);
   };
-  request.send()
+  request.send();
 };
 
 
@@ -132,26 +151,30 @@ function add_channel(contents) {
 };
 
 
-function load_messages(channel) {
-  socket.emit('request messages', {'channel': channel});
-};
-
-// // function load_messages(channel) {
-//   const request = new XMLHttpRequest();
-//   request.open('POST', '/messages');
-//   request.onload = () => {
-//     const data = JSON.parse(request.responseText);
+// socketio version
+// function load_messages(channel) {
+//   socket.emit('request messages', {'channel': channel});
+//   socket.on('messages', data => {
 //     data.forEach(add_message);
-//   };
-//   // Add channel name to request data
-//   const data = new FormData();
-//   data.append('channel', channel);
-//   // Send request
-//   request.send(data)
+//   });
 // };
 
+function load_messages(currentChannel) {
+  const request = new XMLHttpRequest();
+  request.open('POST', '/messages');
+  request.onload = () => {
+    const data = JSON.parse(request.responseText);
+    data.forEach(add_message);
+  };
+  // Add channel name to request data
+  const data = new FormData();
+  data.append('channel', currentChannel);
+  // Send request
+  request.send(data);
+};
 
 const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
-// function add_message(contents) {
-//
-// }
+function add_message(contents) {
+  const message = message_template({'text': contents.text, 'info': `by ${contents.name}`});
+  document.querySelector('#messages').innerHTML += message;
+};
