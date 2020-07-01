@@ -62,6 +62,8 @@ document.addEventListener('click', event => {
   if (element.className === 'channel-link') {
     const currentChannel = element.innerHTML.trim();
     localStorage.setItem('channel', currentChannel);
+    // Clear the messages from the previous channel
+    document.querySelector('#messages').innerHTML = '';
     event.preventDefault();
     alert(`channel ${currentChannel} is selected!`);
     load_messages(currentChannel);
