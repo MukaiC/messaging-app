@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#message').value = '';
       return false;
     };
+    // Make the form invisible if no channel is selected
+    if (!localStorage.getItem('channel')) {
+      document.querySelector("#new-message").style.visibility = 'hidden';
+    };
   });
 
   // When a new channel is announced, add to the unordered list
@@ -51,67 +55,43 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#channels').innerHTML += new_channel;
   });
 
-  // When a channel already exists, alert the user
+  // When a channel by the same name already exists, alert the user
   socket.on('alert', data => {
     alert(`${data.message}`);
   });
 });
 
+// Load messages when a channel is selected
 document.addEventListener('click', event => {
   const element = event.target;
   if (element.className === 'channel-link') {
     const currentChannel = element.innerHTML.trim();
     localStorage.setItem('channel', currentChannel);
-    // Clear the messages from the previous channel
-    document.querySelector('#messages').innerHTML = '';
+    // // Display the channel name
+    // document.querySelector('#room-name').innerHTML = currentChannel;
+    // // Clear the messages from the previous channel
+    // document.querySelector('#messages').innerHTML = '';
+    // // Prevent the page from reloading
     event.preventDefault();
     alert(`channel ${currentChannel} is selected!`);
     load_messages(currentChannel);
-    // return false;
   };
 });
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   document.querySelectorAll('.channel-link').forEach(function (link) {
-//       link.onclick = function() {
-//         const currentChannel = this.innerHTML;
-//         // localStorage.setItem('channel', currentChannel);
-//         alert(`Entering ${currentChannel}!`);
-//         load_messages(currentChannel);
-//         return false;
-//       };
-//     });
-// });
-
-
 // Load channels
 document.addEventListener('DOMContentLoaded', load_channels);
-// document.addEventListener('DOMContentLoaded', load_messages("channel 1"));
 
-// Load messages if channel is selected
-// document.addEventListener('DOMContentLoaded', () => {
-//   if (localStorage.getItem('channel'))
-//     let channel = localStorage.getItem('channel');
-//     load_messages(channel);
-// });
+// Load messages if there is a channel stored
+document.addEventListener('DOMContentLoaded', () => {
+  if ('channel' in localStorage) {
+    let currentChannel = localStorage.getItem('channel');
+    load_messages(currentChannel);
+    document.querySelector("#new-message").style.visibility = 'visible';
+  };
+});
 
 
-
-
-// // When an enter button is pressed
-// document.addEventListener('click', event => {
-//   const element = event.target;
-//   if (element.className === 'enter') {
-//     // Store the name of the channel in localStorage
-//     const currentChannel = this.parentElement
-//     // Enter the room - soketio
-//
-//     // Load messages in the channel
-//     load_messages(channel);
-//   }
-// })
-
-// For a first time user to register a display name
+// A user visits the page for the first time and registers a display name
 document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem('name')) {
       document.querySelector('#user').style.display = 'none';
@@ -153,15 +133,13 @@ function add_channel(contents) {
 };
 
 
-// socketio version
-// function load_messages(channel) {
-//   socket.emit('request messages', {'channel': channel});
-//   socket.on('messages', data => {
-//     data.forEach(add_message);
-//   });
-// };
-
 function load_messages(currentChannel) {
+  // Display the channel name
+  document.querySelector('#room-name').innerHTML = currentChannel;
+  // Display the message form
+  document.querySelector("#new-message").style.visibility = 'visible';
+  // Clear the messages from the previous channel
+  document.querySelector('#messages').innerHTML = '';
   const request = new XMLHttpRequest();
   request.open('POST', '/messages');
   request.onload = () => {

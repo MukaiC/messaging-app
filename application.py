@@ -70,22 +70,25 @@ def messages():
     index = list_channels.index(channel)
     # Extract messages for the channel
     messages = stored_channels[index]['messages']
+    # if there is no message yet in the channel
+    # if messages == []:
+        # messages = [{'name': '', 'text': 'Threre is no messages in this channel yet.'}]
     return jsonify(messages)
 
 
-
-@socketio.on("request messages")
-def messages(data):
-    room = data["channel"]
-    join_room(room)
-    # Find the index of matching channel
-    list_channels = []
-    for c in stored_channels:
-        list_channels.append(c['room'])
-    index = list_channels.index(room)
-    # Extract messages for the channel
-    messages = stored_channels[index]['messages']
-    emit("messages", messages)
+#
+# @socketio.on("request messages")
+# def messages(data):
+#     room = data["channel"]
+#     join_room(room)
+#     # Find the index of matching channel
+#     list_channels = []
+#     for c in stored_channels:
+#         list_channels.append(c['room'])
+#     index = list_channels.index(room)
+#     # Extract messages for the channel
+#     messages = stored_channels[index]['messages']
+#     emit("messages", messages)
 
 # @socketio.on("add message")
 # def messages(data):
