@@ -38,8 +38,6 @@ def channels():
         list_channels.append(c["room"])
     return jsonify(list_channels)
 
-
-
 @socketio.on("create channel")
 def channels(data):
     list_channels = [] # stored_channels to be appended
@@ -64,10 +62,27 @@ def channels(data):
         # name_new_channel = new_channel['room']
         # emit("announce channel", {"name_new_channel": name_new_channel, "id_new_channel": new_channel_id}, broadcast=True)
 
-
     else:
         emit("alert", {"message": "This channel already exists. Please choose different name."}, broadcast=False)
 
+# !!!
+@socketio.on("add message")
+def messages(data):
+    channel = data['channel']
+    name = data['name']
+    text = data['message']
+    time = data['time']
+    new_message = {'name': name, 'text': text, 'time': time}
+
+    # list_channels = []
+    # for c in stored_channels:
+    #     list_channels.append(c['room'])
+    # index = list_channels.index(channel)
+    # !!! if the number of messages are more than 100, remove the oldest one before putting the new one
+
+    # stored_channels[index]['messages'].append(new_message)
+    emit ('announce message', {'text': text, 'name': name, 'time': time}, broadcast=True)
+    # emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
 
 @app.route("/messages", methods=["POST"])
 def messages():
@@ -99,11 +114,7 @@ def messages():
 #     messages = stored_channels[index]['messages']
 #     emit("messages", messages)
 
-# @socketio.on("add message")
-# def messages(data):
-#     name = session["name"]
-#     # time =
-#     pass
+
 
 
 if __name__ == '__main__':

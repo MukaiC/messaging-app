@@ -1,6 +1,13 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
+const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
+  load_channels();
+  // Make the message submission form invisible if no channel is selected
+  if (!localStorage.getItem('channel')) {
+    document.querySelector("#new-message").style.visibility = 'hidden';
+  };
+
   // Connect to websocket
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -23,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#channel').value = '';
       return false;
     };
+
     // Submit-message button enabled only when there is text in the input field
     document.querySelector('#submit-message').disabled = true;
     document.querySelector('#message').onkeyup = () => {
@@ -32,18 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
       else
         document.querySelector('#submit-message').disabled = true;
     };
+
     // When a new message is submitted
     document.querySelector('#new-message').onsubmit = () => {
-      const message = document.querySelector('#message').value.trim();
-      const time = Date.now()
-      socket.emit('add message', {'message': message, 'time':time});
+      let name = localStorage.getItem('name');
+      let message = document.querySelector('#message').value.trim();
+      let time = Date.now();
+      let channel = localStorage.getItem('channel');
+      socket.emit('add message', {'name': name, 'message': message, 'time':time, 'channel': channel});
       document.querySelector('#message').value = '';
       return false;
     };
-    // Make the form invisible if no channel is selected
-    if (!localStorage.getItem('channel')) {
-      document.querySelector("#new-message").style.visibility = 'hidden';
-    };
+
   });
 
   // When a new channel is announced, add to the unordered list
@@ -55,33 +63,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#channels').innerHTML += new_channel;
   });
 
+  // When a new message is announced
+  socket.on('announce message', data => {
+    const new_message = message_template({'text': data.text, 'info': `written by ${data.name} at ${data.time}`});
+    document.querySelector('#messages').innerHTML+= new_message;
+  });
+
   // When a channel by the same name already exists, alert the user
   socket.on('alert', data => {
     alert(`${data.message}`);
   });
+
+  document.addEventListener('click', event => {
+    const element = event.target;
+    if (element.className === 'channel-link') {
+      const currentChannel = element.innerHTML.trim();
+      localStorage.setItem('channel', currentChannel);
+      // Prevent the page from reloading
+      event.preventDefault();
+      alert(`channel ${currentChannel} is selected!`);
+      load_messages(currentChannel);
+    };
+  });
+
+  // !!!part of !!!1 below
+  // () => {
+  //   if ('channel' in localStorage) {
+  //     let currentChannel = localStorage.getItem('channel');
+  //     load_messages(currentChannel);
+  //     document.querySelector("#new-message").style.visibility = 'visible';
+  //   };
+  // };
+
 });
 
-// Load messages when a channel is selected
-document.addEventListener('click', event => {
-  const element = event.target;
-  if (element.className === 'channel-link') {
-    const currentChannel = element.innerHTML.trim();
-    localStorage.setItem('channel', currentChannel);
-    // // Display the channel name
-    // document.querySelector('#room-name').innerHTML = currentChannel;
-    // // Clear the messages from the previous channel
-    // document.querySelector('#messages').innerHTML = '';
-    // // Prevent the page from reloading
-    event.preventDefault();
-    alert(`channel ${currentChannel} is selected!`);
-    load_messages(currentChannel);
-  };
-});
 
-// Load channels
-document.addEventListener('DOMContentLoaded', load_channels);
-
-// Load messages if there is a channel stored
+// !!!1 Load messages if there is a channel stored
 document.addEventListener('DOMContentLoaded', () => {
   if ('channel' in localStorage) {
     let currentChannel = localStorage.getItem('channel');
@@ -153,8 +170,29 @@ function load_messages(currentChannel) {
   request.send(data);
 };
 
-const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
+
 function add_message(contents) {
   const message = message_template({'text': contents.text, 'info': `by ${contents.name}`});
   document.querySelector('#messages').innerHTML += message;
 };
+
+// The following is already incorporated above
+// Load channels
+// document.addEventListener('DOMContentLoaded', load_channels);
+
+// Load messages when a channel is selected
+// document.addEventListener('click', event => {
+//   const element = event.target;
+//   if (element.className === 'channel-link') {
+//     const currentChannel = element.innerHTML.trim();
+//     localStorage.setItem('channel', currentChannel);
+//     // // Display the channel name
+//     // document.querySelector('#room-name').innerHTML = currentChannel;
+//     // // Clear the messages from the previous channel
+//     // document.querySelector('#messages').innerHTML = '';
+//     // // Prevent the page from reloading
+//     event.preventDefault();
+//     alert(`channel ${currentChannel} is selected!`);
+//     load_messages(currentChannel);
+//   };
+// });
