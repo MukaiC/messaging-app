@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#new-message').onsubmit = () => {
       let name = localStorage.getItem('name');
       let message = document.querySelector('#message').value.trim();
-      let time = Date.now();
+      // let time = Date.now();
       let channel = localStorage.getItem('channel');
-      socket.emit('add message', {'name': name, 'message': message, 'time':time, 'channel': channel});
+      socket.emit('add message', {'name': name, 'message': message, 'channel': channel});
       document.querySelector('#message').value = '';
       return false;
     };
@@ -77,11 +77,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', event => {
     const element = event.target;
     if (element.className === 'channel-link') {
+      const username = localStorage.getItem('name');
+      // if the user is already in a room, leave it before joining the new one
+      if ('channel' in localStorage) {
+        let channel = localStorage.getItem('channel')
+        socket.emit('leave channel', {'channel': channel, 'username': username});
+      };
+
       const currentChannel = element.innerHTML.trim();
       localStorage.setItem('channel', currentChannel);
       // Prevent the page from reloading
       event.preventDefault();
       alert(`channel ${currentChannel} is selected!`);
+      socket.emit('join channel', {'channel':currentChannel, 'username':username});
       load_messages(currentChannel);
     };
   });

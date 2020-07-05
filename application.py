@@ -1,7 +1,7 @@
-import os
+import os, datetime
 
 from flask import Flask, render_template, request,  jsonify  #session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
 
@@ -71,7 +71,8 @@ def messages(data):
     channel = data['channel']
     name = data['name']
     text = data['message']
-    time = data['time']
+    # timestamp
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_message = {'name': name, 'text': text, 'time': time}
 
     # list_channels = []
@@ -81,8 +82,22 @@ def messages(data):
     # !!! if the number of messages are more than 100, remove the oldest one before putting the new one
 
     # stored_channels[index]['messages'].append(new_message)
-    emit ('announce message', {'text': text, 'name': name, 'time': time}, broadcast=True)
+    emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
     # emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
+
+@socketio.on('join channel')
+def on_join(data):
+    username = data['username']
+    room = data['channel']
+    join_room(room)
+    # send(username + 'has joined the room.', room=room)
+
+@socketio.on('leave channel')
+def on_leave(data):
+    username = data['username']
+    room = data['channel']
+    leave_room(room)
+    # send(username + 'has left the room.', room=room)
 
 @app.route("/messages", methods=["POST"])
 def messages():
