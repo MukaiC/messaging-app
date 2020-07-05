@@ -17,6 +17,12 @@
     </div>
   </script>
 
+  <script id="message-alert" type="text/x-handlebars-template">
+    <div class="alert">
+      <span>{% raw -%}{{ text }}{%- endraw %}</span><br>
+    </div>
+  </script>
+
   <script src="{{ url_for('static', filename='index.js') }}"></script>
 
 {% endblock %}

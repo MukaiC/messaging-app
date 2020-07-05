@@ -1,7 +1,7 @@
 import os, datetime
 
 from flask import Flask, render_template, request,  jsonify  #session
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
 app = Flask(__name__)
 
@@ -91,6 +91,7 @@ def on_join(data):
     room = data['channel']
     join_room(room)
     # send(username + 'has joined the room.', room=room)
+    emit('announce join',{'text': username + ' has joined the room.'}, room=room)
 
 @socketio.on('leave channel')
 def on_leave(data):
@@ -98,6 +99,7 @@ def on_leave(data):
     room = data['channel']
     leave_room(room)
     # send(username + 'has left the room.', room=room)
+    emit('announce leave',{'text': username + ' has left the room.'}, room=room)
 
 @app.route("/messages", methods=["POST"])
 def messages():

@@ -1,5 +1,6 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
 const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
+const alert_template = Handlebars.compile(document.querySelector('#message-alert').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
   load_channels();
@@ -69,6 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#messages').innerHTML+= new_message;
   });
 
+  // When a user enter a channel
+  socket.on('announce join', data => {
+    const join_alert = alert_template({'text': data.text});
+    document.querySelector('#messages').innerHTML+= join_alert;
+  });
+
+  // When a user leaves a channel
+  socket.on('announce leave', data => {
+    const leave_alert = alert_template({'text': data.text});
+    document.querySelector('#messages').innerHTML+= leave_alert;
+  });
+
   // When a channel by the same name already exists, alert the user
   socket.on('alert', data => {
     alert(`${data.message}`);
@@ -88,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('channel', currentChannel);
       // Prevent the page from reloading
       event.preventDefault();
-      alert(`channel ${currentChannel} is selected!`);
+      // alert(`channel ${currentChannel} is selected!`);
       socket.emit('join channel', {'channel':currentChannel, 'username':username});
       load_messages(currentChannel);
     };

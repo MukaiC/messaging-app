@@ -32,3 +32,10 @@ ul {
   margin-left: 50px;
   border-radius: 5px; /*for rounded borders*/
 }
+.alert {
+  color: #696969;  /*DimGray*/
+  background-color: #b0c5e6; /*#FFC0CB*/
+  padding: 7px;
+  margin-left: 50px;
+  border-radius: 5px; /*for rounded borders*/
+}
