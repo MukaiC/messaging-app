@@ -1,6 +1,6 @@
 const channel_template = Handlebars.compile(document.querySelector('#channel-item').innerHTML);
 const message_template = Handlebars.compile(document.querySelector('#message-item').innerHTML);
-const alert_template = Handlebars.compile(document.querySelector('#message-alert').innerHTML);
+const alert_template = Handlebars.compile(document.querySelector('#alert-message').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
   load_channels();
@@ -19,10 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enable the button only if there is text in the input field.
     document.querySelector('#channel').onkeyup = () => {
       let channeltitle = document.querySelector('#channel').value.trim();
-      if (channeltitle.length > 0)
+      if (channeltitle.length > 0) {
         document.querySelector('#submit-channel').disabled = false;
-      else
+      } else {
         document.querySelector('#submit-channel').disabled = true;
+      }
     };
     // When a new channel is submited
     document.querySelector('#create-new-channel').onsubmit = () => {
@@ -36,10 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#submit-message').disabled = true;
     document.querySelector('#message').onkeyup = () => {
       let message = document.querySelector('#message').value.trim();
-      if (message.length > 0)
+      if (message.length > 0) {
         document.querySelector('#submit-message').disabled = false;
-      else
+      } else {
         document.querySelector('#submit-message').disabled = true;
+      }
     };
 
     // When a new message is submitted
@@ -87,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`${data.message}`);
   });
 
+  // When a channel is selected, load the mssages in the room
   document.addEventListener('click', event => {
     const element = event.target;
     if (element.className === 'channel-link') {
@@ -107,26 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
-  // !!!part of !!!1 below
-  // () => {
-  //   if ('channel' in localStorage) {
-  //     let currentChannel = localStorage.getItem('channel');
-  //     load_messages(currentChannel);
-  //     document.querySelector("#new-message").style.visibility = 'visible';
-  //   };
-  // };
-
-});
-
-
-// !!!1 Load messages if there is a channel stored
-document.addEventListener('DOMContentLoaded', () => {
+  // !!!1 Load messages and join the channel, if there is a channel stored
   if ('channel' in localStorage) {
     let currentChannel = localStorage.getItem('channel');
+    let username = localStorage.getItem('name');
+    socket.emit('join channel', {'channel':currentChannel, 'username':username});
     load_messages(currentChannel);
     document.querySelector("#new-message").style.visibility = 'visible';
   };
+
 });
+
+
 
 
 // A user visits the page for the first time and registers a display name
@@ -196,24 +191,3 @@ function add_message(contents) {
   const message = message_template({'text': contents.text, 'info': `by ${contents.name}`});
   document.querySelector('#messages').innerHTML += message;
 };
-
-// The following is already incorporated above
-// Load channels
-// document.addEventListener('DOMContentLoaded', load_channels);
-
-// Load messages when a channel is selected
-// document.addEventListener('click', event => {
-//   const element = event.target;
-//   if (element.className === 'channel-link') {
-//     const currentChannel = element.innerHTML.trim();
-//     localStorage.setItem('channel', currentChannel);
-//     // // Display the channel name
-//     // document.querySelector('#room-name').innerHTML = currentChannel;
-//     // // Clear the messages from the previous channel
-//     // document.querySelector('#messages').innerHTML = '';
-//     // // Prevent the page from reloading
-//     event.preventDefault();
-//     alert(`channel ${currentChannel} is selected!`);
-//     load_messages(currentChannel);
-//   };
-// });
