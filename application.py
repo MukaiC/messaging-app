@@ -75,13 +75,13 @@ def messages(data):
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_message = {'name': name, 'text': text, 'time': time}
 
-    # list_channels = []
-    # for c in stored_channels:
-    #     list_channels.append(c['room'])
-    # index = list_channels.index(channel)
+    list_channels = []
+    for c in stored_channels:
+        list_channels.append(c['room'])
+    index = list_channels.index(channel)
     # !!! if the number of messages are more than 100, remove the oldest one before putting the new one
 
-    # stored_channels[index]['messages'].append(new_message)
+    stored_channels[index]['messages'].append(new_message)
     emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
     # emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
 
