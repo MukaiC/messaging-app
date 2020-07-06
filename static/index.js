@@ -59,9 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new channel is announced, add to the unordered list
   socket.on('announce channel', data => {
-    // const new_channel = channel_template ({'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
-    // const new_channel = channel_template ({'heading': 'NEW! ', 'contents': data.name_new_channel, 'channel_id': `channel-${data.id_new_channel}`})
-    // const new_channel = channel_template ({'contents': `New!   ${data.name_new_channel} `, 'channel_id': `channel-${data.id_new_channel}`})
     const new_channel = channel_template({'contents': data.name_new_channel});
     document.querySelector('#channels').innerHTML += new_channel;
   });
@@ -118,10 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     load_messages(currentChannel);
     document.querySelector("#new-message").style.visibility = 'visible';
   };
-
 });
-
-
 
 
 // A user visits the page for the first time and registers a display name
@@ -158,10 +152,7 @@ function load_channels() {
 
 
 function add_channel(contents) {
-  // const channel = channel_template({'contents': contents.room, 'channel_id': `channel-${contents.id}`});
-  // const channel = channel_template({'contents': `${contents.room}`, 'channel_id': `channel-${contents.id}`});
   const channel = channel_template({'contents': contents});
-  // const channel = channel_template({'contents': contents.room});
   document.querySelector('#channels').innerHTML += channel;
 };
 
@@ -188,6 +179,6 @@ function load_messages(currentChannel) {
 
 
 function add_message(contents) {
-  const message = message_template({'text': contents.text, 'info': `by ${contents.name}`});
+  const message = message_template({'text': contents.text, 'info': `written by ${contents.name} at ${contents.time}`});
   document.querySelector('#messages').innerHTML += message;
 };
