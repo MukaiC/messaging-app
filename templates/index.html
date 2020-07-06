@@ -14,7 +14,9 @@
     <div class="message">
       <span>{% raw -%}{{ text }}{%- endraw %}</span><br>
       <span><small>{% raw -%}{{ info }}{%- endraw %}</small></span>
+      {% raw -%}{{#if author}}{%- endraw %}
       <button class="hide btn btn-outline-info btn-sm">Hide</button>
+      {% raw -%}{{/if}}{%- endraw %}
     </div>
   </script>
 

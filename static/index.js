@@ -65,7 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When a new message is announced
   socket.on('announce message', data => {
-    const new_message = message_template({'text': data.text, 'info': `written by ${data.name} at ${data.time}`});
+    let username = data.name;
+    // if the message is written by the user, show hide button with the message
+    if (localStorage.getItem('name') === username) {
+      var isAuthor = true;
+    }
+    const new_message = message_template({'author': isAuthor,'text': data.text, 'info': `written by ${data.name} at ${data.time}`});
     document.querySelector('#messages').innerHTML+= new_message;
   });
 
@@ -179,6 +184,11 @@ function load_messages(currentChannel) {
 
 
 function add_message(contents) {
-  const message = message_template({'text': contents.text, 'info': `written by ${contents.name} at ${contents.time}`});
+  // if the message is written by the user, show hide button with the message
+  let username = contents.name;
+  if (localStorage.getItem('name') === username) {
+    var isAuthor = true;
+  }
+  const message = message_template({'author': isAuthor, 'text': contents.text, 'info': `written by ${contents.name} at ${contents.time}`});
   document.querySelector('#messages').innerHTML += message;
 };
