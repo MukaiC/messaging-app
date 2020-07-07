@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentChannel = localStorage.getItem('channel');
     let username = localStorage.getItem('name');
     load_messages(currentChannel);
-    socket.emit('join channel', {'channel':currentChannel, 'username':username});
+    // socket.emit('join channel', {'channel':currentChannel, 'username':username});
     alert(`${data.text}`);
   });
 

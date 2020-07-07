@@ -90,7 +90,7 @@ def remove(data):
             index_m = list_messages.index(message)
 
     # Replace the text
-    list_messages[index_m]['text'] = "This message has been removed."
+    list_messages[index_m]['text'] = "**This message has been removed**"
     # this removes the message
     # list_messages.pop(index_m)
 
