@@ -13,7 +13,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 # stored_channels = []
-stored_channels = [{'room':'test: channel 1', 'messages': [{'name': 'domo', 'text': 'test: message1', 'time': '06-07-20'}, {'name': 'Kirby', 'text': 'message2', 'time': '06-07-20'}]}]
+stored_channels = [{'room':'test: channel 1', 'messages': [{'name': 'domo', 'text': 'test: message1', 'time': '06-07-20 12:12:12'}, {'name': 'kirby', 'text': 'message2', 'time': '06-07-20 12:12:12'}]}]
 
 # stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
 
@@ -72,6 +72,31 @@ def messages(data):
     emit ('announce message', {'text': text, 'name': name, 'time': time}, room=channel)
 
 
+@socketio.on('remove message')
+def remove(data):
+    channel = data['channel']
+    name = data['name']
+    time = data['timestamp']
+
+    # find the message in the stored_channels and remove it
+    list_channels = []
+    for c in stored_channels:
+        list_channels.append(c['room'])
+    index = list_channels.index(channel)
+    list_messages = stored_channels[index]['messages']
+
+    for message in list_messages:
+        if message['name'] == name and message['time'] == time:
+            index_m = list_messages.index(message)
+
+    # Replace the text
+    list_messages[index_m]['text'] = "This message has been removed."
+    # this removes the message
+    # list_messages.pop(index_m)
+
+    emit('announce removed message',{'text': 'a message is removed'}, room=channel)
+
+
 @socketio.on('join channel')
 def on_join(data):
     username = data['username']
@@ -85,6 +110,8 @@ def on_leave(data):
     room = data['channel']
     leave_room(room)
     emit('announce leave',{'text': username + ' has left the room.'}, room=room)
+
+
 
 @app.route("/messages", methods=["POST"])
 def messages():

@@ -91,9 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`${data.message}`);
   });
 
-  // When a channel is selected, load the mssages in the room
+  // When a message is removed, alert the user
+  socket.on('announce removed message', data => {
+    let currentChannel = localStorage.getItem('channel');
+    let username = localStorage.getItem('name');
+    load_messages(currentChannel);
+    socket.emit('join channel', {'channel':currentChannel, 'username':username});
+    alert(`${data.text}`);
+  });
+
   document.addEventListener('click', event => {
     const element = event.target;
+    // When a channel is selected, load the mssages in the room
     if (element.className === 'channel-link') {
       const username = localStorage.getItem('name');
       // if the user is already in a room, leave it before joining the new one
@@ -110,9 +119,24 @@ document.addEventListener('DOMContentLoaded', () => {
       socket.emit('join channel', {'channel':currentChannel, 'username':username});
       load_messages(currentChannel);
     };
+
+    // When a hide button is clicked, remove the message
+    if (element.className === 'hide btn btn-outline-info btn-sm') {
+      let channel = localStorage.getItem('channel');
+      let username = localStorage.getItem('name');
+      // this extracts the name and time attached to the message
+      let info = element.parentElement.querySelector('.message-info').innerHTML;
+      let date = info.split(" ").slice(-2)[0];
+      let time = info.split(" ").slice(-1);
+      let timestamp = date + ' ' + time;
+      socket.emit('remove message', {'channel': channel, 'name': username, 'timestamp': timestamp});
+      alert(`Message removed: ${channel} / ${username} / ${timestamp}`);
+      element.parentElement.remove();
+    };
+
   });
 
-  // !!!1 Load messages and join the channel, if there is a channel stored
+  // Load messages and join the channel, if there is a channel stored
   if ('channel' in localStorage) {
     let currentChannel = localStorage.getItem('channel');
     let username = localStorage.getItem('name');
