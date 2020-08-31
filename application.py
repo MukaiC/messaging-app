@@ -1,6 +1,6 @@
 import os, datetime
 
-from flask import Flask, render_template, request,  jsonify  #session
+from flask import Flask, render_template, request,  jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
@@ -13,11 +13,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 # stored_channels = []
-stored_channels = [{'room':'test: channel 1', 'messages': [{'name': 'domo', 'text': 'test: message1', 'time': '06-07-20 12:12:12'}, {'name': 'kirby', 'text': 'message2', 'time': '06-07-20 12:12:12'}]}]
-
-# stored_channels = [{'room':'channel 1', 'messages': [{'name': 'domo', 'text': 'message1'}, {'name': 'domo', 'text': 'message2'}]}, {'room': 'channel 2', 'messages': [{'name':'domo', 'text':'testing2'}, {'name':'kirby', 'text': 'poyo'}]}]
-
-
+stored_channels = [{'room':'Welcome!', 'messages': [{'name': 'user1', 'text': 'Hello world!', 'time': '06-07-20 12:12:12'}]}]
 
 @app.route("/")
 def index():
